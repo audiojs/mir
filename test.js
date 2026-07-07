@@ -1,5 +1,5 @@
 import test, { almost, ok, is } from 'tst'
-import { chroma, chord, smoothChords, key, TEMPLATES } from './index.js'
+import { chroma, chord, smoothChords, key, TEMPLATES, tonnetz, melody, tempogram } from './index.js'
 
 let fs = 44100
 
@@ -232,3 +232,51 @@ test('key — scores are sorted descending', () => {
   for (let i = 1; i < r.scores.length; i++) ok(r.scores[i].score <= r.scores[i - 1].score)
 })
 
+
+test('tonnetz — 6 dims; circle magnitudes invariant under transposition', () => {
+	let c = chroma(synthChord([60, 64, 67], 4096), { fs })
+	let tz = tonnetz(c)
+	is(tz.length, 6)
+	ok(Math.hypot(...tz) > 0.01, 'non-degenerate for a triad')
+	for (let shift of [1, 3, 5, 7]) {
+		let rot = new Float32Array(12)
+		for (let k = 0; k < 12; k++) rot[(k + shift) % 12] = c[k]
+		let tz2 = tonnetz(rot)
+		for (let j = 0; j < 3; j++) {
+			almost(Math.hypot(tz2[2 * j], tz2[2 * j + 1]), Math.hypot(tz[2 * j], tz[2 * j + 1]), 1e-4, 'circle ' + j + ' magnitude, shift ' + shift)
+		}
+	}
+	ok(tonnetz(new Float32Array(12)).every(v => v === 0), 'zero chroma → zeros')
+})
+
+test('melody — steady tone tracks flat, sweep tracks rising, silence unvoiced', () => {
+	let { f0, voiced } = melody(sine(440, fs), { fs })
+	let v = 0, err = 0
+	for (let i = 2; i < f0.length - 2; i++) if (voiced[i]) { v++; err = Math.max(err, Math.abs(f0[i] - 440)) }
+	ok(v > f0.length * 0.8, 'mostly voiced')
+	ok(err < 3, '±3 Hz on steady 440')
+
+	let n = fs * 2
+	let sweep = new Float32Array(n), phase = 0
+	for (let i = 0; i < n; i++) { let f = 220 * Math.pow(4, i / n); sweep[i] = Math.sin(phase += 2 * Math.PI * f / fs) }
+	let m = melody(sweep, { fs })
+	let q = Math.floor(m.f0.length / 4), head = 0, hn = 0, tail = 0, tn = 0
+	for (let i = 1; i < q; i++) if (m.voiced[i]) { head += m.f0[i]; hn++ }
+	for (let i = m.f0.length - q; i < m.f0.length - 1; i++) if (m.voiced[i]) { tail += m.f0[i]; tn++ }
+	ok(tail / tn > 2.5 * (head / hn), 'sweep rises ~2 octaves')
+
+	let s = melody(silence(fs), { fs })
+	ok(Array.from(s.voiced).every(v => v === 0), 'silence unvoiced')
+})
+
+test('tempogram — 120 BPM click track reads ~120 everywhere', () => {
+	let n = fs * 12
+	let d = new Float32Array(n)
+	let period = fs / 2 // 120 BPM
+	for (let t = 0; t < n; t += period) {
+		for (let i = 0; i < 300 && t + i < n; i++) d[t + i] += Math.sin(2 * Math.PI * 1000 * i / fs) * Math.exp(-i / 60)
+	}
+	let { bpm, times } = tempogram(d, { fs, window: 6, hop: 2 })
+	ok(bpm.length >= 3, 'several windows')
+	for (let i = 0; i < bpm.length; i++) almost(bpm[i], 120, 10, 'window at ' + times[i].toFixed(1) + 's → ' + bpm[i].toFixed(1) + ' BPM')
+})

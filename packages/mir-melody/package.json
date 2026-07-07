@@ -1,10 +1,20 @@
 {
   "name": "@audio/mir-melody",
-  "version": "0.0.0",
-  "description": "Continuous melody F0 contour — frame-level Hz, not discrete notes",
+  "version": "1.0.0",
+  "description": "Melody contour — frame-level F0 track via YIN with voicing (MIREX melody shape)",
   "type": "module",
   "sideEffects": false,
-  "private": true,
+  "main": "melody.js",
+  "exports": {
+    ".": "./melody.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "melody.js"
+  ],
+  "dependencies": {
+    "@audio/pitch-yin": "file:../../../pitch/packages/pitch-yin"
+  },
   "keywords": [
     "audio",
     "dsp",
@@ -15,5 +25,8 @@
   "author": "Dmitry Iv. <dfcreative@gmail.com>",
   "engines": {
     "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

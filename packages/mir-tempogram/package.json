@@ -1,10 +1,20 @@
 {
   "name": "@audio/mir-tempogram",
-  "version": "0.0.0",
-  "description": "Tempogram — local tempo over time via onset autocorrelation",
+  "version": "1.0.0",
+  "description": "Tempogram — local tempo over time via onset-envelope autocorrelation",
   "type": "module",
   "sideEffects": false,
-  "private": true,
+  "main": "tempogram.js",
+  "exports": {
+    ".": "./tempogram.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "tempogram.js"
+  ],
+  "dependencies": {
+    "@audio/beat-core": "file:../../../beat/packages/beat-core"
+  },
   "keywords": [
     "audio",
     "dsp",
@@ -15,5 +25,8 @@
   "author": "Dmitry Iv. <dfcreative@gmail.com>",
   "engines": {
     "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
