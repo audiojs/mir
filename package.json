@@ -26,7 +26,9 @@
     "@audio/mir-key": "^1.0.0",
     "@audio/mir-tonnetz": "^1.0.0",
     "@audio/mir-melody": "^1.0.0",
-    "@audio/mir-tempogram": "^1.0.0"
+    "@audio/mir-tempogram": "^1.0.0",
+    "@audio/mir-structure": "^1.0.0",
+    "@audio/mir-fingerprint": "^1.0.0"
   },
   "devDependencies": {
     "tst": "^9.4.0"

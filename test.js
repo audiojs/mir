@@ -1,5 +1,5 @@
 import test, { almost, ok, is } from 'tst'
-import { chroma, chord, smoothChords, key, TEMPLATES, tonnetz, melody, tempogram } from './index.js'
+import { chroma, chord, smoothChords, key, TEMPLATES, tonnetz, melody, tempogram, structure, fingerprint, fingerprintMatch } from './index.js'
 
 let fs = 44100
 
@@ -279,4 +279,67 @@ test('tempogram — 120 BPM click track reads ~120 everywhere', () => {
 	let { bpm, times } = tempogram(d, { fs, window: 6, hop: 2 })
 	ok(bpm.length >= 3, 'several windows')
 	for (let i = 0; i < bpm.length; i++) almost(bpm[i], 120, 10, 'window at ' + times[i].toFixed(1) + 's → ' + bpm[i].toFixed(1) + ' BPM')
+})
+
+function texSaw (n, f = 220) {
+	let d = new Float32Array(n)
+	for (let i = 0; i < n; i++) { let s = 0; for (let h = 1; h <= 10; h++) s += Math.sin(2 * Math.PI * h * f * i / fs) / h; d[i] = 0.4 * s }
+	return d
+}
+function texNoise (n, seed = 3) {
+	let d = new Float32Array(n), s = seed
+	for (let i = 0; i < n; i++) { s = (s * 1103515245 + 12345) & 0x7fffffff; d[i] = 0.4 * (s / 0x3fffffff - 1) }
+	return d
+}
+
+test('structure — texture changes produce boundaries near the seams', () => {
+	let a = texSaw(2 * fs), b = texNoise(2 * fs), c = texSaw(2 * fs, 220)
+	let d = new Float32Array(6 * fs)
+	d.set(a, 0); d.set(b, 2 * fs); d.set(c, 4 * fs)
+	let { boundaries } = structure(d, { fs })
+	ok(boundaries.length >= 2 && boundaries.length <= 4, boundaries.length + ' boundaries')
+	ok(boundaries.some(t => Math.abs(t - 2) < 0.35), 'seam at 2 s found (' + boundaries.map(x => x.toFixed(2)).join(', ') + ')')
+	ok(boundaries.some(t => Math.abs(t - 4) < 0.35), 'seam at 4 s found')
+})
+
+// deterministic pseudo-music: chirps + tone steps + noise bursts
+function track (seconds, seed = 11) {
+	let n = Math.round(seconds * fs)
+	let d = new Float32Array(n), s = seed
+	let rand = () => { s = (s * 1103515245 + 12345) & 0x7fffffff; return s / 0x7fffffff }
+	for (let seg = 0; seg < seconds * 4; seg++) {
+		let start = Math.round(seg * fs / 4), len = fs / 4
+		let f = 200 + Math.floor(rand() * 30) * 60
+		for (let i = 0; i < len && start + i < n; i++) {
+			d[start + i] += 0.5 * Math.sin(2 * Math.PI * (f + 100 * i / len) * i / fs) + 0.15 * Math.sin(2 * Math.PI * 3 * f * i / fs)
+		}
+	}
+	return d
+}
+
+test('fingerprint — self-match, snippet offset, noise robustness, rejection', () => {
+	let full = track(8)
+	let fpFull = fingerprint(full)
+	ok(fpFull.length > 200, fpFull.length + ' landmarks')
+
+	let self = fingerprintMatch(fpFull, fpFull)
+	is(self.offset, 0)
+	ok(self.score > 100, 'self score ' + self.score)
+
+	let snipStart = 3 * fs
+	let snippet = full.slice(snipStart, snipStart + 2 * fs)
+	let m = fingerprintMatch(fpFull, fingerprint(snippet))
+	let expected = Math.round(snipStart / 512)
+	ok(Math.abs(m.offset - expected) <= 2, 'offset ' + m.offset + ' ≈ ' + expected)
+	ok(m.score > 20, 'snippet score ' + m.score)
+
+	let noisy = Float32Array.from(snippet)
+	let s2 = 99
+	for (let i = 0; i < noisy.length; i++) { s2 = (s2 * 1103515245 + 12345) & 0x7fffffff; noisy[i] += 0.05 * (s2 / 0x3fffffff - 1) }
+	let mn = fingerprintMatch(fpFull, fingerprint(noisy))
+	ok(Math.abs(mn.offset - expected) <= 2, 'noisy offset holds')
+	ok(mn.score > m.score * 0.3, 'noisy score ' + mn.score + ' vs ' + m.score)
+
+	let junk = fingerprintMatch(fpFull, fingerprint(texNoise(2 * fs, 77)))
+	ok(junk.score < m.score * 0.2, 'unrelated noise rejected (' + junk.score + ')')
 })
