@@ -1,0 +1,31 @@
+{
+  "name": "@audio/mir-chord",
+  "version": "1.0.0",
+  "description": "24 binary chord templates: C, C#, … B (major) then C, C#, … B (minor)",
+  "type": "module",
+  "sideEffects": false,
+  "main": "chord.js",
+  "exports": {
+    ".": "./chord.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "chord.js"
+  ],
+  "keywords": [
+    "audio",
+    "dsp",
+    "mir",
+    "chord",
+    "chord-detection",
+    "viterbi"
+  ],
+  "license": "MIT",
+  "author": "Dmitry Iv. <dfcreative@gmail.com>",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
+}

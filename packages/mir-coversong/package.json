@@ -1,0 +1,19 @@
+{
+  "name": "@audio/mir-coversong",
+  "version": "0.0.0",
+  "description": "Cover song identification — recognize the same composition across performances",
+  "type": "module",
+  "sideEffects": false,
+  "private": true,
+  "keywords": [
+    "audio",
+    "dsp",
+    "mir",
+    "coversong"
+  ],
+  "license": "MIT",
+  "author": "Dmitry Iv. <dfcreative@gmail.com>",
+  "engines": {
+    "node": ">=18"
+  }
+}

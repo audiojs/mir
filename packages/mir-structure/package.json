@@ -1,0 +1,19 @@
+{
+  "name": "@audio/mir-structure",
+  "version": "0.0.0",
+  "description": "Structural segmentation — verse/chorus/bridge boundaries (self-similarity matrix + HMM)",
+  "type": "module",
+  "sideEffects": false,
+  "private": true,
+  "keywords": [
+    "audio",
+    "dsp",
+    "mir",
+    "structure"
+  ],
+  "license": "MIT",
+  "author": "Dmitry Iv. <dfcreative@gmail.com>",
+  "engines": {
+    "node": ">=18"
+  }
+}
