@@ -1,7 +1,7 @@
 {
   "name": "@audio/mir-structure",
   "version": "1.0.0",
-  "description": "Structural segmentation — Foote checkerboard novelty over MFCC self-similarity (Foote 2000)",
+  "description": "Structural segmentation \u2014 Foote checkerboard novelty over MFCC self-similarity (Foote 2000)",
   "type": "module",
   "sideEffects": false,
   "main": "structure.js",
@@ -13,7 +13,7 @@
     "structure.js"
   ],
   "dependencies": {
-    "@audio/spectral-mfcc": "file:../../../spectral/packages/spectral-mfcc"
+    "@audio/spectral-mfcc": "^1.0.0"
   },
   "keywords": [
     "audio",
