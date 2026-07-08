@@ -1,10 +1,9 @@
 {
   "name": "@audio/mir-downbeat",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Downbeat estimation — locate the bar-level \"1\" within a beat grid",
   "type": "module",
   "sideEffects": false,
-  "private": true,
   "keywords": [
     "audio",
     "dsp",
@@ -15,5 +14,20 @@
   "author": "Dmitry Iv. <dfcreative@gmail.com>",
   "engines": {
     "node": ">=18"
+  },
+  "main": "downbeat.js",
+  "exports": {
+    ".": "./downbeat.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "downbeat.js"
+  ],
+  "dependencies": {
+    "@audio/mir-chroma": "^1.0.0",
+    "fourier-transform": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

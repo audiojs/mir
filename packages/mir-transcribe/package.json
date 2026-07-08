@@ -1,10 +1,9 @@
 {
   "name": "@audio/mir-transcribe",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Polyphonic transcription — audio → MIDI note events (onset, offset, pitch, velocity)",
   "type": "module",
   "sideEffects": false,
-  "private": true,
   "keywords": [
     "audio",
     "dsp",
@@ -15,5 +14,19 @@
   "author": "Dmitry Iv. <dfcreative@gmail.com>",
   "engines": {
     "node": ">=18"
+  },
+  "main": "transcribe.js",
+  "exports": {
+    ".": "./transcribe.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "transcribe.js"
+  ],
+  "dependencies": {
+    "@audio/mir-multif0": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

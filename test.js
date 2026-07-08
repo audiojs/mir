@@ -1,5 +1,5 @@
 import test, { almost, ok, is } from 'tst'
-import { chroma, chord, smoothChords, key, TEMPLATES, tonnetz, melody, tempogram, structure, fingerprint, fingerprintMatch } from './index.js'
+import { chroma, chord, smoothChords, key, TEMPLATES, tonnetz, melody, tempogram, structure, fingerprint, fingerprintMatch, multif0, transcribe, drums, downbeat, similarity, coversong } from './index.js'
 
 let fs = 44100
 
@@ -342,4 +342,107 @@ test('fingerprint — self-match, snippet offset, noise robustness, rejection', 
 
 	let junk = fingerprintMatch(fpFull, fingerprint(texNoise(2 * fs, 77)))
 	ok(junk.score < m.score * 0.2, 'unrelated noise rejected (' + junk.score + ')')
+})
+
+// --- polyphonic pitch ---
+
+function harmonicTone (freqs, n, nh = 5) {
+	let d = new Float32Array(n)
+	for (let i = 0; i < n; i++)
+		for (let [f, a] of freqs)
+			for (let h = 1; h <= nh; h++) d[i] += a / h * Math.sin(2 * Math.PI * f * h * i / fs)
+	return d
+}
+
+test('multif0 — duet and triad resolved, single note stays single', () => {
+	let duet = multif0(harmonicTone([[220, 0.5], [330, 0.4]], fs), { fs })[8].pitches.map(p => p.freq)
+	ok(duet.some(f => Math.abs(1200 * Math.log2(f / 220)) < 50), '220 found')
+	ok(duet.some(f => Math.abs(1200 * Math.log2(f / 330)) < 50), '330 found')
+	is(duet.length, 2, 'no spurious pitches')
+
+	let single = multif0(harmonicTone([[440, 0.5]], fs), { fs })[8].pitches
+	is(single.length, 1)
+	almost(single[0].freq, 440, 6)
+
+	let triad = multif0(harmonicTone([[262, 0.5], [330, 0.45], [392, 0.4]], fs, 4), { fs })[8].pitches.map(p => p.freq)
+	for (let f of [262, 330, 392]) ok(triad.some(g => Math.abs(1200 * Math.log2(g / f)) < 50), `${f} in triad`)
+})
+
+test('transcribe — two sequential notes → events with right midi and timing', () => {
+	let n = fs * 2, d = new Float32Array(n)
+	for (let i = 0; i < fs * 0.9; i++) for (let h = 1; h <= 5; h++) d[i] += 0.5 / h * Math.sin(2 * Math.PI * 262 * h * i / fs)
+	for (let i = fs; i < fs * 1.9; i++) for (let h = 1; h <= 5; h++) d[i] += 0.5 / h * Math.sin(2 * Math.PI * 392 * h * i / fs)
+	let notes = transcribe(d, { fs })
+	is(notes.length, 2, 'two notes')
+	is(notes[0].midi, 60, 'C4')
+	is(notes[1].midi, 67, 'G4')
+	ok(Math.abs(notes[0].time) < 0.15 && Math.abs(notes[1].time - 1) < 0.15, 'timing')
+	ok(notes[0].duration > 0.6 && notes[1].duration > 0.6, 'durations')
+})
+
+// --- rhythm section ---
+
+function kick (n) { let d = new Float32Array(n); for (let i = 0; i < n; i++) d[i] = Math.exp(-i / (n / 6)) * Math.sin(2 * Math.PI * 55 * i / fs * (1 + 1.5 * Math.exp(-i / (n / 12)))); return d }
+function snare (n, seed = 22222) { let d = new Float32Array(n); let r = seed; for (let i = 0; i < n; i++) { r = (r * 1664525 + 1013904223) >>> 0; d[i] = Math.exp(-i / (n / 5)) * (0.5 * Math.sin(2 * Math.PI * 190 * i / fs) + 0.7 * (r / 2147483648 - 1)) } return d }
+function hat (n, seed = 77777) { let d = new Float32Array(n); let r = seed, hp = 0; for (let i = 0; i < n; i++) { r = (r * 1664525 + 1013904223) >>> 0; let x = (r / 2147483648 - 1); hp = 0.7 * (hp + x); d[i] = Math.exp(-i / (n / 4)) * (x - hp) } return d }
+
+test('drums — kick / snare / hihat classified at their onsets', () => {
+	let n = fs * 2, d = new Float32Array(n)
+	let put = (gen, t, len) => { let g = gen(len); let at = Math.round(t * fs); for (let i = 0; i < len && at + i < n; i++) d[at + i] += g[i] }
+	put(kick, 0.2, 8000); put(snare, 0.7, 6000); put(hat, 1.2, 3000); put(kick, 1.6, 8000)
+	let evs = drums(d, { fs })
+	let near = (t) => evs.find(e => Math.abs(e.time - t) < 0.08)
+	ok(near(0.2)?.type === 'kick', `kick @0.2 (${near(0.2)?.type})`)
+	ok(near(0.7)?.type === 'snare', `snare @0.7 (${near(0.7)?.type})`)
+	ok(near(1.2)?.type === 'hihat', `hihat @1.2 (${near(1.2)?.type})`)
+	ok(near(1.6)?.type === 'kick', `kick @1.6 (${near(1.6)?.type})`)
+})
+
+test('downbeat — bass-heavy beat 1 found in a 4/4 grid', () => {
+	let n = fs * 4, d = new Float32Array(n)
+	let beats = []
+	for (let b = 0; b < 8; b++) {
+		let t = 0.25 + b * 0.46
+		beats.push(t)
+		let at = Math.round(t * fs)
+		if (b % 4 === 1) { let g = kick(9000); for (let i = 0; i < 9000 && at + i < n; i++) d[at + i] += 1.5 * g[i] }
+		else { let g = hat(2500); for (let i = 0; i < 2500 && at + i < n; i++) d[at + i] += 0.6 * g[i] }
+	}
+	let r = downbeat(d, { beats, meter: 4, fs })
+	is(r.phase, 1, 'phase = the bass-heavy beat')
+	almost(r.downbeats[0], beats[1], 1e-9)
+})
+
+// --- catalog-level ---
+
+test('similarity — self ≈ 1-ish, tone vs noise low', () => {
+	let a = harmonicTone([[262, 0.5], [392, 0.3]], fs)
+	let b = harmonicTone([[262, 0.5], [392, 0.3]], fs)
+	let self = similarity(a, b, { fs })
+	ok(self.score > 0.9, `self ${self.score.toFixed(3)}`)
+	let noise = new Float32Array(fs)
+	let r = 12345
+	for (let i = 0; i < fs; i++) { r = (r * 1664525 + 1013904223) >>> 0; noise[i] = 0.5 * (r / 2147483648 - 1) }
+	let cross = similarity(a, noise, { fs })
+	ok(cross.score < self.score - 0.25, `tone vs noise ${cross.score.toFixed(3)}`)
+})
+
+test('coversong — transposed progression recognized with right OTI', () => {
+	let prog = (shift) => {
+		let n = fs * 2, d = new Float32Array(n)
+		let chords = [[262, 330, 392], [294, 370, 440], [330, 415, 494], [262, 330, 392]]
+		chords.forEach((cs, ci) => {
+			let at = Math.round(ci * 0.5 * fs)
+			for (let i = 0; i < fs / 2 && at + i < n; i++)
+				for (let f of cs) d[at + i] += 0.3 * Math.sin(2 * Math.PI * f * 2 ** (shift / 12) * (i / fs))
+		})
+		return d
+	}
+	let same = coversong(prog(0), prog(3), { fs })
+	ok(same.score > 0.8, `cover score ${same.score.toFixed(3)}`)
+	is(same.transposition, 3, 'OTI = 3 semitones')
+	let r = 999, noise = new Float32Array(fs * 2)
+	for (let i = 0; i < noise.length; i++) { r = (r * 1664525 + 1013904223) >>> 0; noise[i] = 0.5 * (r / 2147483648 - 1) }
+	let diff = coversong(prog(0), noise, { fs })
+	ok(diff.score < same.score - 0.2, `noise not a cover (${diff.score.toFixed(3)})`)
 })

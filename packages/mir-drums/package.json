@@ -1,10 +1,9 @@
 {
   "name": "@audio/mir-drums",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Drum transcription — kick/snare/hihat onset detection and classification",
   "type": "module",
   "sideEffects": false,
-  "private": true,
   "keywords": [
     "audio",
     "dsp",
@@ -15,5 +14,20 @@
   "author": "Dmitry Iv. <dfcreative@gmail.com>",
   "engines": {
     "node": ">=18"
+  },
+  "main": "drums.js",
+  "exports": {
+    ".": "./drums.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "drums.js"
+  ],
+  "dependencies": {
+    "@audio/beat-core": "^1.0.0",
+    "fourier-transform": "^2.3.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

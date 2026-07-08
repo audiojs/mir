@@ -1,10 +1,9 @@
 {
   "name": "@audio/mir-similarity",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "Audio similarity — distance metric between recordings",
   "type": "module",
   "sideEffects": false,
-  "private": true,
   "keywords": [
     "audio",
     "dsp",
@@ -15,5 +14,20 @@
   "author": "Dmitry Iv. <dfcreative@gmail.com>",
   "engines": {
     "node": ">=18"
+  },
+  "main": "similarity.js",
+  "exports": {
+    ".": "./similarity.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "similarity.js"
+  ],
+  "dependencies": {
+    "@audio/spectral-mfcc": "^1.0.0",
+    "@audio/mir-chroma": "^1.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
