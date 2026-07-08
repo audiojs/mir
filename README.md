@@ -23,7 +23,7 @@
 
 ML-tier tasks (genre, mood, tags, stem separation) are deferred — they need hosted model weights, which conflicts with the no-ML-in-the-hot-path stance.
 
-`chroma`/`chord`/`key` originated in [pitch-detection](https://github.com/audiojs/pitch-detection) and were extracted here.
+`chroma`/`chord`/`key` originated in [pitch](https://github.com/audiojs/pitch) and were extracted here.
 
 ## Usage
 
