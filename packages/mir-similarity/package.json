@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-similarity",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Audio similarity — distance metric between recordings",
   "type": "module",
   "sideEffects": false,
@@ -18,10 +18,12 @@
   "main": "similarity.js",
   "exports": {
     ".": "./similarity.js",
+    "./stat": "./stat.js",
     "./package.json": "./package.json"
   },
   "files": [
-    "similarity.js"
+    "similarity.js",
+    "stat.js"
   ],
   "dependencies": {
     "@audio/spectral-mfcc": "^1.0.0",

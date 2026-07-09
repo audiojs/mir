@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-coversong",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Cover song identification — recognize the same composition across performances",
   "type": "module",
   "sideEffects": false,
@@ -18,10 +18,12 @@
   "main": "coversong.js",
   "exports": {
     ".": "./coversong.js",
+    "./stat": "./stat.js",
     "./package.json": "./package.json"
   },
   "files": [
-    "coversong.js"
+    "coversong.js",
+    "stat.js"
   ],
   "dependencies": {
     "@audio/mir-chroma": "^1.0.0"
