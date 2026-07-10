@@ -1,6 +1,6 @@
 # @audio/mir
 
-> Music information retrieval — chroma, chord and key detection atoms, with a MIREX-parity roadmap.
+> Music information retrieval — chroma, chord, key, and MIREX-parity analysis atoms.
 
 ## Atoms
 
@@ -9,17 +9,17 @@
 | `@audio/mir-chroma` | ✔ | 12-bin pitch-class profile — PCP and NNLS methods |
 | `@audio/mir-chord` | ✔ | Chord detection — 24 binary templates + Viterbi smoothing |
 | `@audio/mir-key` | ✔ | Key detection — Krumhansl-Schmuckler profiles |
-| `@audio/mir-tempogram` | planned | local tempo over time |
-| `@audio/mir-tonnetz` | planned | tonal centroid features |
-| `@audio/mir-structure` | planned | structural segmentation |
-| `@audio/mir-downbeat` | planned | downbeat estimation |
-| `@audio/mir-melody` | planned | continuous melody F0 contour |
-| `@audio/mir-multif0` | planned | multiple simultaneous F0 |
-| `@audio/mir-fingerprint` | planned | audio fingerprinting |
-| `@audio/mir-similarity` | planned | audio similarity metric |
-| `@audio/mir-transcribe` | planned | polyphonic transcription |
-| `@audio/mir-drums` | planned | drum transcription |
-| `@audio/mir-coversong` | planned | cover song identification |
+| `@audio/mir-tempogram` | ✔ | Local tempo over time — autocorrelated onset envelope |
+| `@audio/mir-tonnetz` | ✔ | Tonal centroid features — chroma projected onto fifths/thirds circles |
+| `@audio/mir-structure` | ✔ | Structural segmentation — Foote novelty on MFCC self-similarity |
+| `@audio/mir-downbeat` | ✔ | Downbeat estimation |
+| `@audio/mir-melody` | ✔ | Continuous melody F0 contour — YIN per frame |
+| `@audio/mir-multif0` | ✔ | Multiple simultaneous F0 — Klapuri iterative spectral subtraction |
+| `@audio/mir-fingerprint` | ✔ | Audio fingerprinting — Shazam-class landmark hashing |
+| `@audio/mir-similarity` | ✔ | Audio similarity metric |
+| `@audio/mir-transcribe` | ✔ | Polyphonic transcription |
+| `@audio/mir-drums` | ✔ | Drum transcription |
+| `@audio/mir-coversong` | ✔ | Cover song identification |
 
 ML-tier tasks (genre, mood, tags, stem separation) are deferred — they need hosted model weights, which conflicts with the no-ML-in-the-hot-path stance.
 
