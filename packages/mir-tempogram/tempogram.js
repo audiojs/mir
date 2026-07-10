@@ -2,7 +2,7 @@
 // over sliding windows. Shorter lags accumulate more terms, biasing toward the
 // notated tempo over its subdivisions (librosa/MIREX tempogram class).
 
-import { spectralFlux } from '@audio/beat-core'
+import { spectralFlux } from '@audio/onset'
 
 /**
  * @param {Float32Array} data — mono PCM

@@ -2,7 +2,7 @@
 // kick = sub dominance (40–130 Hz), hihat/cymbal = HF dominance (>5 kHz), snare = the
 // broadband mid case (150 Hz–2 kHz body + noise skirt). Classical banded baseline.
 
-import { spectralFlux, peakPick } from '@audio/beat-core'
+import { spectralFlux, peakPick } from '@audio/onset'
 import { fft } from 'fourier-transform'
 
 /**

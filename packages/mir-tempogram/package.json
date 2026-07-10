@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-tempogram",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Tempogram — local tempo over time via onset-envelope autocorrelation",
   "type": "module",
   "sideEffects": false,
@@ -15,7 +15,7 @@
     "audio.js"
   ],
   "dependencies": {
-    "@audio/beat-core": "^1.0.0"
+    "@audio/onset": "^1.0.0"
   },
   "keywords": [
     "audio",
