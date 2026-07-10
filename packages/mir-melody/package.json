@@ -7,12 +7,16 @@
   "main": "melody.js",
   "exports": {
     ".": "./melody.js",
-    "./audio": "./audio.js",
+    "./audio": {
+      "types": "./audio.d.ts",
+      "default": "./audio.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "melody.js",
-    "audio.js"
+    "audio.js",
+    "audio.d.ts"
   ],
   "dependencies": {
     "@audio/pitch-yin": "^1.0.0"

@@ -7,12 +7,16 @@
   "main": "chroma.js",
   "exports": {
     ".": "./chroma.js",
-    "./audio": "./audio.js",
+    "./audio": {
+      "types": "./audio.d.ts",
+      "default": "./audio.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "chroma.js",
-    "audio.js"
+    "audio.js",
+    "audio.d.ts"
   ],
   "dependencies": {
     "fourier-transform": "^2.2.0"

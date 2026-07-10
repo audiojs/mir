@@ -18,12 +18,16 @@
   "main": "transcribe.js",
   "exports": {
     ".": "./transcribe.js",
-    "./audio": "./audio.js",
+    "./audio": {
+      "types": "./audio.d.ts",
+      "default": "./audio.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "transcribe.js",
-    "audio.js"
+    "audio.js",
+    "audio.d.ts"
   ],
   "dependencies": {
     "@audio/mir-multif0": "^1.0.0"

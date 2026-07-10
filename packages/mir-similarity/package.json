@@ -18,12 +18,16 @@
   "main": "similarity.js",
   "exports": {
     ".": "./similarity.js",
-    "./audio": "./audio.js",
+    "./audio": {
+      "types": "./audio.d.ts",
+      "default": "./audio.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "similarity.js",
-    "audio.js"
+    "audio.js",
+    "audio.d.ts"
   ],
   "dependencies": {
     "@audio/spectral-mfcc": "^1.0.0",

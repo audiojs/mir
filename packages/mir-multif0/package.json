@@ -18,12 +18,16 @@
   "main": "multif0.js",
   "exports": {
     ".": "./multif0.js",
-    "./audio": "./audio.js",
+    "./audio": {
+      "types": "./audio.d.ts",
+      "default": "./audio.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "multif0.js",
-    "audio.js"
+    "audio.js",
+    "audio.d.ts"
   ],
   "dependencies": {
     "fourier-transform": "^2.3.0"

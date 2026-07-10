@@ -18,12 +18,16 @@
   "main": "downbeat.js",
   "exports": {
     ".": "./downbeat.js",
-    "./audio": "./audio.js",
+    "./audio": {
+      "types": "./audio.d.ts",
+      "default": "./audio.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [
     "downbeat.js",
-    "audio.js"
+    "audio.js",
+    "audio.d.ts"
   ],
   "dependencies": {
     "@audio/mir-chroma": "^1.0.0",
