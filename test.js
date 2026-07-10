@@ -446,3 +446,39 @@ test('coversong — transposed progression recognized with right OTI', () => {
 	let diff = coversong(prog(0), noise, { fs })
 	ok(diff.score < same.score - 0.2, `noise not a cover (${diff.score.toFixed(3)})`)
 })
+
+// =============================================================================
+// stat manifests (audio.js) — whole-signal forms hosted by the audio engine
+
+test('chroma stat form — chromagram frames + normalized mean peak at chord tones', async () => {
+	let { chroma: chromaStat } = await import('./packages/mir-chroma/audio.js')
+	is(chromaStat.stat, 'chroma')
+	let n = fs * 2
+	let d = synthChord([60, 64, 67], n)
+	let res = chromaStat.compute([d, silence(n)], { sampleRate: fs })  // stereo fold (ch2 silent halves level, chroma is normalized)
+	ok(res.frames.length > 10, `${res.frames.length} frames`)
+	is(res.times.length, res.frames.length, 'one timestamp per frame')
+	ok(res.times[0] < res.times[1], 'times ascend')
+	is(res.mean.length, 12)
+	let sum = 0
+	for (let x of res.mean) sum += x
+	almost(sum, 1, 1e-6, 'mean is L1-normalized')
+	let top3 = [...res.mean].map((v, i) => [i, v]).sort((a, b) => b[1] - a[1]).slice(0, 3).map(x => x[0]).sort((a, b) => a - b)
+	is(top3.join(','), '0,4,7', 'C major tones dominate the mean chroma')
+})
+
+test('tonnetz stat form — 6-D trajectory, distinct centroids for distinct keys', async () => {
+	let { tonnetz: tonnetzStat } = await import('./packages/mir-tonnetz/audio.js')
+	is(tonnetzStat.stat, 'tonnetz')
+	let n = fs * 2
+	let cMaj = tonnetzStat.compute([synthChord([60, 64, 67], n)], { sampleRate: fs })
+	let fsMaj = tonnetzStat.compute([synthChord([66, 70, 73], n)], { sampleRate: fs })  // F♯ major — tritone away
+	is(cMaj.mean.length, 6)
+	is(cMaj.frames[0].length, 6)
+	is(cMaj.times.length, cMaj.frames.length)
+	let dist = 0
+	for (let k = 0; k < 6; k++) dist += (cMaj.mean[k] - fsMaj.mean[k]) ** 2
+	ok(Math.sqrt(dist) > 0.3, `tritone-separated keys far apart in tonnetz space (${Math.sqrt(dist).toFixed(3)})`)
+	let empty = tonnetzStat.compute([silence(fs)], { sampleRate: fs })
+	ok(empty.frames.every(f => f.every(x => x === 0)), 'silence → zero centroids, no NaN')
+})

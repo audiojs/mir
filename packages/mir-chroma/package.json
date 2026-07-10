@@ -1,16 +1,18 @@
 {
   "name": "@audio/mir-chroma",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Chroma (pitch-class profile) feature — a 12-D vector where each bin holds",
   "type": "module",
   "sideEffects": false,
   "main": "chroma.js",
   "exports": {
     ".": "./chroma.js",
+    "./audio": "./audio.js",
     "./package.json": "./package.json"
   },
   "files": [
-    "chroma.js"
+    "chroma.js",
+    "audio.js"
   ],
   "dependencies": {
     "fourier-transform": "^2.2.0"
@@ -30,5 +32,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "audio": "./audio.js"
 }
