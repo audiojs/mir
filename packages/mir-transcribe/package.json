@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-transcribe",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Polyphonic transcription — audio → MIDI note events (onset, offset, pitch, velocity)",
   "type": "module",
   "sideEffects": false,
@@ -18,17 +18,18 @@
   "main": "transcribe.js",
   "exports": {
     ".": "./transcribe.js",
-    "./stat": "./stat.js",
+    "./audio": "./audio.js",
     "./package.json": "./package.json"
   },
   "files": [
     "transcribe.js",
-    "stat.js"
+    "audio.js"
   ],
   "dependencies": {
     "@audio/mir-multif0": "^1.0.0"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "audio": "./audio.js"
 }

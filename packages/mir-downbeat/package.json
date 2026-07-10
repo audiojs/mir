@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-downbeat",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Downbeat estimation — locate the bar-level \"1\" within a beat grid",
   "type": "module",
   "sideEffects": false,
@@ -18,12 +18,12 @@
   "main": "downbeat.js",
   "exports": {
     ".": "./downbeat.js",
-    "./stat": "./stat.js",
+    "./audio": "./audio.js",
     "./package.json": "./package.json"
   },
   "files": [
     "downbeat.js",
-    "stat.js"
+    "audio.js"
   ],
   "dependencies": {
     "@audio/mir-chroma": "^1.0.0",
@@ -31,5 +31,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "audio": "./audio.js"
 }

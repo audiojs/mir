@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-multif0",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Multiple F0 estimation — all simultaneous pitches per frame (polyphonic)",
   "type": "module",
   "sideEffects": false,
@@ -18,17 +18,18 @@
   "main": "multif0.js",
   "exports": {
     ".": "./multif0.js",
-    "./stat": "./stat.js",
+    "./audio": "./audio.js",
     "./package.json": "./package.json"
   },
   "files": [
     "multif0.js",
-    "stat.js"
+    "audio.js"
   ],
   "dependencies": {
     "fourier-transform": "^2.3.0"
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "audio": "./audio.js"
 }

@@ -1,18 +1,18 @@
 {
   "name": "@audio/mir-fingerprint",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Landmark fingerprinting — spectral peak constellation hashes + offset-vote matching (Wang 2003 class)",
   "type": "module",
   "sideEffects": false,
   "main": "fingerprint.js",
   "exports": {
     ".": "./fingerprint.js",
-    "./stat": "./stat.js",
+    "./audio": "./audio.js",
     "./package.json": "./package.json"
   },
   "files": [
     "fingerprint.js",
-    "stat.js"
+    "audio.js"
   ],
   "dependencies": {
     "fourier-transform": "^2.2.0"
@@ -32,5 +32,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "audio": "./audio.js"
 }

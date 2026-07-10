@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-drums",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "Drum transcription — kick/snare/hihat onset detection and classification",
   "type": "module",
   "sideEffects": false,
@@ -18,12 +18,12 @@
   "main": "drums.js",
   "exports": {
     ".": "./drums.js",
-    "./stat": "./stat.js",
+    "./audio": "./audio.js",
     "./package.json": "./package.json"
   },
   "files": [
     "drums.js",
-    "stat.js"
+    "audio.js"
   ],
   "dependencies": {
     "@audio/beat-core": "^1.0.0",
@@ -31,5 +31,6 @@
   },
   "publishConfig": {
     "access": "public"
-  }
+  },
+  "audio": "./audio.js"
 }
