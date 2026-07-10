@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-fingerprint",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Landmark fingerprinting — spectral peak constellation hashes + offset-vote matching (Wang 2003 class)",
   "type": "module",
   "sideEffects": false,

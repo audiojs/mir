@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-structure",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Structural segmentation — Foote checkerboard novelty over MFCC self-similarity (Foote 2000)",
   "type": "module",
   "sideEffects": false,

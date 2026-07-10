@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-melody",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Melody contour — frame-level F0 track via YIN with voicing (MIREX melody shape)",
   "type": "module",
   "sideEffects": false,

@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-transcribe",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Polyphonic transcription — audio → MIDI note events (onset, offset, pitch, velocity)",
   "type": "module",
   "sideEffects": false,
