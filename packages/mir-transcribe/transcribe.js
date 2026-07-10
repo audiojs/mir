@@ -3,8 +3,7 @@
 // shorter than minDuration are dropped. Velocity from median frame salience.
 
 import multif0 from '@audio/mir-multif0'
-
-const hzToMidi = f => 69 + 12 * Math.log2(f / 440)
+import { hzToMidi } from '@audio/note'
 
 /**
  * @param {Float32Array} data — mono PCM

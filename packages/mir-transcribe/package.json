@@ -30,10 +30,16 @@
     "audio.d.ts"
   ],
   "dependencies": {
-    "@audio/mir-multif0": "^1.0.0"
+    "@audio/mir-multif0": "^1.0.0",
+    "@audio/note": "^1.0.0"
   },
   "publishConfig": {
     "access": "public"
   },
-  "audio": "./audio.js"
+  "audio": "./audio.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/audiojs/mir.git",
+    "directory": "packages/mir-transcribe"
+  }
 }
