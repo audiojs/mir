@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-chord",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "24 binary chord templates: C, C#, … B (major) then C, C#, … B (minor)",
   "type": "module",
   "sideEffects": false,
@@ -10,7 +10,8 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "chord.js"
+    "chord.js",
+    "index.d.ts"
   ],
   "keywords": [
     "audio",
@@ -32,5 +33,7 @@
     "type": "git",
     "url": "git+https://github.com/audiojs/mir.git",
     "directory": "packages/mir-chord"
-  }
+  },
+  "funding": "https://github.com/sponsors/audiojs",
+  "types": "index.d.ts"
 }

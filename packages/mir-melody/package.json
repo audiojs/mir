@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-melody",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Melody contour — frame-level F0 track via YIN with voicing (MIREX melody shape)",
   "type": "module",
   "sideEffects": false,
@@ -16,7 +16,8 @@
   "files": [
     "melody.js",
     "audio.js",
-    "audio.d.ts"
+    "audio.d.ts",
+    "index.d.ts"
   ],
   "dependencies": {
     "@audio/pitch-yin": "^1.0.0"
@@ -40,5 +41,7 @@
     "type": "git",
     "url": "git+https://github.com/audiojs/mir.git",
     "directory": "packages/mir-melody"
-  }
+  },
+  "funding": "https://github.com/sponsors/audiojs",
+  "types": "index.d.ts"
 }

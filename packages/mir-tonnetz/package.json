@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-tonnetz",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "Tonal centroid (Tonnetz) — 6-dim interval-circle projection of chroma (Harte 2006)",
   "type": "module",
   "sideEffects": false,
@@ -16,7 +16,8 @@
   "files": [
     "tonnetz.js",
     "audio.js",
-    "audio.d.ts"
+    "audio.d.ts",
+    "index.d.ts"
   ],
   "dependencies": {
     "@audio/mir-chroma": "^1.0.0"
@@ -40,5 +41,7 @@
     "type": "git",
     "url": "git+https://github.com/audiojs/mir.git",
     "directory": "packages/mir-tonnetz"
-  }
+  },
+  "funding": "https://github.com/sponsors/audiojs",
+  "types": "index.d.ts"
 }

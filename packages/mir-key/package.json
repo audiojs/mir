@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-key",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Krumhansl–Kessler major and minor key profiles",
   "type": "module",
   "sideEffects": false,
@@ -10,7 +10,8 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "key.js"
+    "key.js",
+    "index.d.ts"
   ],
   "keywords": [
     "audio",
@@ -32,5 +33,7 @@
     "type": "git",
     "url": "git+https://github.com/audiojs/mir.git",
     "directory": "packages/mir-key"
-  }
+  },
+  "funding": "https://github.com/sponsors/audiojs",
+  "types": "index.d.ts"
 }
