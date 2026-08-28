@@ -1,5 +1,7 @@
 # @audio/mir
 
+Try it in the browser: [Key and BPM finder](https://audiojs.dev/util/key-bpm/). Runs on this package, nothing is uploaded.
+
 > Music information retrieval — chroma, chord, key, and MIREX-parity analysis atoms.
 
 ## Atoms
