@@ -6,7 +6,10 @@
   "sideEffects": false,
   "main": "key.js",
   "exports": {
-    ".": "./key.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./key.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [

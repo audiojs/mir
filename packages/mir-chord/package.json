@@ -6,7 +6,10 @@
   "sideEffects": false,
   "main": "chord.js",
   "exports": {
-    ".": "./chord.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./chord.js"
+    },
     "./package.json": "./package.json"
   },
   "files": [

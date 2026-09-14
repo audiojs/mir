@@ -6,7 +6,10 @@
   "sideEffects": false,
   "main": "melody.js",
   "exports": {
-    ".": "./melody.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./melody.js"
+    },
     "./audio": {
       "types": "./audio.d.ts",
       "default": "./audio.js"

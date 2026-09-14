@@ -6,7 +6,10 @@
   "sideEffects": false,
   "main": "tempogram.js",
   "exports": {
-    ".": "./tempogram.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./tempogram.js"
+    },
     "./audio": {
       "types": "./audio.d.ts",
       "default": "./audio.js"

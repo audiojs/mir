@@ -17,7 +17,10 @@
   },
   "main": "drums.js",
   "exports": {
-    ".": "./drums.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./drums.js"
+    },
     "./audio": {
       "types": "./audio.d.ts",
       "default": "./audio.js"

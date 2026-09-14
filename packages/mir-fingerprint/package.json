@@ -6,7 +6,10 @@
   "sideEffects": false,
   "main": "fingerprint.js",
   "exports": {
-    ".": "./fingerprint.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./fingerprint.js"
+    },
     "./audio": {
       "types": "./audio.d.ts",
       "default": "./audio.js"

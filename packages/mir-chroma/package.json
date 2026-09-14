@@ -6,7 +6,10 @@
   "sideEffects": false,
   "main": "chroma.js",
   "exports": {
-    ".": "./chroma.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./chroma.js"
+    },
     "./audio": {
       "types": "./audio.d.ts",
       "default": "./audio.js"

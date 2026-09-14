@@ -6,7 +6,10 @@
   "sideEffects": false,
   "main": "structure.js",
   "exports": {
-    ".": "./structure.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./structure.js"
+    },
     "./audio": {
       "types": "./audio.d.ts",
       "default": "./audio.js"

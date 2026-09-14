@@ -17,7 +17,10 @@
   },
   "main": "multif0.js",
   "exports": {
-    ".": "./multif0.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./multif0.js"
+    },
     "./audio": {
       "types": "./audio.d.ts",
       "default": "./audio.js"

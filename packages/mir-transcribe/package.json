@@ -17,7 +17,10 @@
   },
   "main": "transcribe.js",
   "exports": {
-    ".": "./transcribe.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./transcribe.js"
+    },
     "./audio": {
       "types": "./audio.d.ts",
       "default": "./audio.js"

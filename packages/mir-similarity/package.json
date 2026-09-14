@@ -17,7 +17,10 @@
   },
   "main": "similarity.js",
   "exports": {
-    ".": "./similarity.js",
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./similarity.js"
+    },
     "./audio": {
       "types": "./audio.d.ts",
       "default": "./audio.js"
