@@ -1,0 +1,47 @@
+{
+  "name": "@audio/mir-nnls-chroma",
+  "version": "1.0.0",
+  "description": "NNLS Chroma (Mauch & Dixon 2010): treble and bass chromagram with tuning, as the reference Vamp plugin",
+  "type": "module",
+  "sideEffects": false,
+  "main": "chromagram.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./chromagram.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "chromagram.js",
+    "nnls.js",
+    "index.d.ts"
+  ],
+  "dependencies": {
+    "fourier-transform": "^2.2.0"
+  },
+  "keywords": [
+    "audio",
+    "dsp",
+    "mir",
+    "chroma",
+    "chromagram",
+    "nnls",
+    "tuning"
+  ],
+  "license": "GPL-2.0-or-later",
+  "author": "Dmitry Iv. <dfcreative@gmail.com>",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/audiojs/mir.git",
+    "directory": "packages/mir-nnls-chroma"
+  },
+  "funding": "https://github.com/sponsors/audiojs",
+  "types": "index.d.ts"
+}

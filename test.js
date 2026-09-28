@@ -1,4 +1,7 @@
 import test, { almost, ok, is } from 'tst'
+import { nnls } from './packages/mir-nnls-chroma/nnls.js'
+import chromagram from './packages/mir-nnls-chroma/chromagram.js'
+import chordino from './packages/mir-chordino/chordino.js'
 import { chroma, chord, smoothChords, key, TEMPLATES, tonnetz, melody, tempogram, structure, fingerprint, fingerprintMatch, multif0, transcribe, drums, downbeat, similarity, coversong } from './index.js'
 
 let fs = 44100
@@ -191,6 +194,95 @@ test('smoothChords — Viterbi stabilizes noisy chord stream', () => {
   let frames = [c, c, c, spur, c, c, c]
   let seq = smoothChords(frames, { selfProb: 0.9 }).map(s => s.label)
   ok(seq.every(l => l === 'C'), `stable: ${seq.join(' ')}`)
+})
+
+
+// =============================================================================
+// NNLS Chroma and Chordino against the reference plugin (c4dm/nnls-chroma)
+// =============================================================================
+
+// C, Am, F, G7 over a bass line, 1.5 s each, 8 partials at 0.6^(h-1), concert A at 446 Hz (+23.5 cents)
+function progression(sampleRate = fs, a4 = 446) {
+  let chords = [[48, 60, 64, 67], [45, 57, 60, 64], [41, 53, 57, 60], [43, 55, 59, 62, 65]], len = Math.round(1.5 * sampleRate)
+  let d = new Float32Array(len * chords.length)
+  chords.forEach((notes, c) => {
+    for (let m of notes) {
+      let f0 = a4 * 2 ** ((m - 69) / 12)
+      for (let h = 1; h <= 8 && h * f0 < sampleRate / 2; h++) {
+        let amp = 0.08 * 0.6 ** (h - 1), w = 2 * Math.PI * h * f0 / sampleRate
+        for (let i = 0; i < len; i++) d[c * len + i] += amp * Math.sin(w * i) * Math.min(1, i / 441, (len - i) / 441)
+      }
+    }
+  })
+  return d
+}
+
+// The reference Vamp plugins (NNLS Chroma 'chroma', 'basschroma'; Tuning; Chordino 'simplechord', defaults) on
+// progression(), frames of 16384 every 2048 centred on k·2048 (sonic-annotator's framing); chroma rotated to C first.
+const REF = {
+  tuning: 446.409454,
+  frames: {
+    16: [[3.68038, 0, 0.403817, 0, 2.97198, 0.00764673, 0, 1.9675, 0, 0, 0, 0.473325], [1.30221, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.00231122]],
+    48: [[2.79585, 0, 0.00487797, 0, 2.34478, 0, 0, 0.497133, 0.0903011, 3.37509, 0, 0.5649], [0, 0, 0, 0, 0, 0, 0, 0, 0.0159301, 1.73782, 0, 0.00309066]],
+    80: [[2.34062, 0, 0, 0, 0.705536, 3.03827, 0, 0.648502, 0, 2.94402, 0.0631588, 0.000529362], [0, 0, 0, 0, 0.062881, 2.35792, 0, 0, 0, 0.0128135, 0, 0.00264821]],
+    112: [[0.279096, 0, 1.5588, 0.00971162, 0, 3.08805, 0.0394861, 2.57703, 0, 0.568817, 0, 2.70149], [0, 0, 0, 0, 0, 0, 0.000239906, 2.30966, 0, 0, 0, 0.00317357]]
+  },
+  chords: [[0, 'N'], [0.046440, 'C'], [1.486077, 'Am'], [2.972154, 'F'], [4.504671, 'G7']]
+}
+
+test('chromagram — NNLS Chroma equals the reference plugin, tuning found', () => {
+  let x = progression(), cg = chromagram(x, { fs })
+  is(cg.times.length, Math.ceil(x.length / 2048), 'a frame every 2048 samples from 0')
+  almost(cg.tuning, REF.tuning, 0.01, `tuning ${cg.tuning.toFixed(3)} Hz`)
+  for (let [i, [tr, bs]] of Object.entries(REF.frames)) {
+    let err = 0, n = 0
+    for (let k = 0; k < 12; k++) { err += (cg.treble[i][k] - tr[k]) ** 2 + (cg.bass[i][k] - bs[k]) ** 2; n += tr[k] ** 2 + bs[k] ** 2 }
+    ok(Math.sqrt(err / n) < 1e-4, `frame ${i}: relative difference ${Math.sqrt(err / n).toExponential(1)}`)
+  }
+})
+
+test('chromagram — streamed in odd blocks equals the whole signal', () => {
+  let x = progression(), a = chromagram(x, { fs }), write = chromagram({ fs })
+  for (let i = 0, n = 0; i < x.length; i += n) { n = 1000 + (i % 777); write(x.subarray(i, i + n)) }
+  let b = write()
+  is(b.times.length, a.times.length)
+  is(b.tuning, a.tuning)
+  ok(b.treble.every((f, i) => f.every((v, k) => v === a.treble[i][k] && b.bass[i][k] === a.bass[i][k])), 'same frames')
+})
+
+test('chromagram — silence is empty chroma, tuning 440', () => {
+  let cg = chromagram(new Float32Array(fs), { fs })
+  ok(cg.treble.every(f => f.every(v => v === 0)) && cg.bass.every(f => f.every(v => v === 0)))
+  is(cg.tuning, 440)
+})
+
+test('chordino — the reference Chordino\'s chords at its change times', () => {
+  let x = progression(), cs = chordino(chromagram(x, { fs }), { end: x.length / fs })
+  is(cs.map(c => c.label), REF.chords.map(c => c[1]))
+  cs.forEach((c, i) => almost(c.time, REF.chords[i][0], 1e-6))
+  is(cs.map(c => c.quality), ['N', 'maj', 'min', 'maj', '7'])
+  is(cs.map(c => c.root), [-1, 0, 9, 5, 7])
+  almost(cs.at(-1).time + cs.at(-1).duration, x.length / fs, 1e-9, 'the last chord lasts to the end')
+  ok(cs.slice(1).every(c => c.confidence > 0.8), 'chord tones explain the chroma')
+})
+
+test('chordino — inversion names its bass', () => {
+  // C major over E in the bass
+  let n = Math.round(2 * fs), x = new Float32Array(n)
+  for (let m of [40, 60, 64, 67]) for (let h = 1; h <= 8; h++) {
+    let f = 440 * 2 ** ((m - 69) / 12) * h
+    for (let i = 0; i < n; i++) x[i] += 0.08 * 0.6 ** (h - 1) * Math.sin(2 * Math.PI * f * i / fs)
+  }
+  let c = chordino(chromagram(x, { fs })).find(c => c.label !== 'N')
+  is(c.label, 'C/E')
+  is([c.root, c.bass, c.quality], [0, 4, 'maj'])
+})
+
+test('nnls — equals scipy.optimize.nnls on the normal equations', () => {
+  // A (6×4), b = [1, -0.5, 0.8, 0.3, 0.9, -0.2]: scipy.optimize.nnls(A, b) = [0.77720553, 0, 0.03141807, 0.40296334]
+  let AtA = Float64Array.of(1.62, 0.87, 0.22, 0.68, 0.87, 1.71, 1.24, 0.35, 0.22, 1.24, 2.05, 0.88, 0.68, 0.35, 0.88, 1.3)
+  let x = nnls(AtA, Float64Array.of(1.54, 0.51, 0.59, 1.08), 4)
+  ;[0.77720553, 0, 0.03141807, 0.40296334].forEach((v, i) => almost(x[i], v, 1e-7))
 })
 
 

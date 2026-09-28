@@ -10,6 +10,8 @@ Try it in the browser: [Key and BPM finder](https://audiojs.dev/util/key-bpm/). 
 |---|---|---|
 | `@audio/mir-chroma` | ✔ | 12-bin pitch-class profile — PCP and NNLS methods |
 | `@audio/mir-chord` | ✔ | Chord detection — 24 binary templates + Viterbi smoothing |
+| `@audio/mir-nnls-chroma` | ✔ | NNLS Chroma (Mauch & Dixon 2010) as its reference plugin: treble and bass chromagram, tuning. GPL-2.0-or-later, not in the umbrella |
+| `@audio/mir-chordino` | ✔ | Chordino (Mauch 2010) as its reference plugin: chord sequence from NNLS chroma. GPL-2.0-or-later, not in the umbrella |
 | `@audio/mir-key` | ✔ | Key detection — Krumhansl-Schmuckler profiles |
 | `@audio/mir-tempogram` | ✔ | Local tempo over time — autocorrelated onset envelope |
 | `@audio/mir-tonnetz` | ✔ | Tonal centroid features — chroma projected onto fifths/thirds circles |

@@ -1,0 +1,43 @@
+{
+  "name": "@audio/mir-chordino",
+  "version": "1.0.0",
+  "description": "Chordino (Mauch 2010): chord sequence from NNLS chroma, as the reference Vamp plugin",
+  "type": "module",
+  "sideEffects": false,
+  "main": "chordino.js",
+  "exports": {
+    ".": {
+      "types": "./index.d.ts",
+      "default": "./chordino.js"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "chordino.js",
+    "index.d.ts"
+  ],
+  "keywords": [
+    "audio",
+    "dsp",
+    "mir",
+    "chord",
+    "chord-detection",
+    "chordino",
+    "viterbi"
+  ],
+  "license": "GPL-2.0-or-later",
+  "author": "Dmitry Iv. <dfcreative@gmail.com>",
+  "engines": {
+    "node": ">=18"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/audiojs/mir.git",
+    "directory": "packages/mir-chordino"
+  },
+  "funding": "https://github.com/sponsors/audiojs",
+  "types": "index.d.ts"
+}

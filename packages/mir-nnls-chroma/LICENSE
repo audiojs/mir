@@ -1,0 +1,22 @@
+This work is offered to Krishna (https://github.com/krishnized/license).
+
+---
+
+This package is licensed under the GNU General Public License, version 2 or
+(at your option) any later version (GPL-2.0-or-later), as required by the work
+it translates:
+
+nnls.js and chromagram.js translate NNLSBase.cpp, chromamethods.cpp and
+chromamethods.h (log-frequency kernel, note dictionary, treble and bass
+profiles, tuning, whitening). The non-negative least squares solver is new
+(Lawson & Hanson's active set as FNNLS), not a translation of nnls.c.
+
+NNLS-Chroma / Chordino, Vamp plugins for chromagram and chord estimation.
+Centre for Digital Music, Queen Mary University of London.
+Copyright 2008-2010 Matthias Mauch and QMUL.
+https://github.com/c4dm/nnls-chroma (commit 4c5f214a75cb354f8d8c933e161377c5b4d83713)
+
+Mauch, M. and Dixon, S., "Approximate note transcription for the improved
+identification of difficult chords", ISMIR 2010.
+
+Full GPL-2.0 text: https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
