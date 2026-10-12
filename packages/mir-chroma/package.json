@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-chroma",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "description": "Chroma (pitch-class profile) feature — a 12-D vector where each bin holds",
   "type": "module",
   "sideEffects": false,

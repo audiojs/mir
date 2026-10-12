@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir-chord",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "24 binary chord templates: C, C#, … B (major) then C, C#, … B (minor)",
   "type": "module",
   "sideEffects": false,
