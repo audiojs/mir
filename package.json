@@ -1,6 +1,6 @@
 {
   "name": "@audio/mir",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "type": "module",
   "sideEffects": false,
   "description": "Music information retrieval — umbrella for @audio/mir-* atoms (chroma, chord, key; MIREX-parity roadmap)",
@@ -10,16 +10,16 @@
       "types": "./index.d.ts",
       "default": "./index.js"
     },
-    "./package.json": "./package.json",
-    "./*": {
-      "types": "./members/*.d.ts",
-      "default": "./members/*.js"
-    }
+    "./audio": {
+      "types": "./audio.d.ts",
+      "default": "./audio.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
     "index.js",
     "*.d.ts",
-    "members/"
+    "audio.js"
   ],
   "workspaces": [
     "packages/*"
@@ -28,8 +28,7 @@
     "test": "node test.js",
     "test:all": "npm test --workspaces --if-present && npm test",
     "publish:all": "node ../compile/tools/tested.js && npm publish --workspaces && npm publish",
-    "members": "node scripts/members.js",
-    "prepublishOnly": "node ../compile/tools/tested.js && node scripts/members.js --check"
+    "prepublishOnly": "node ../compile/tools/tested.js"
   },
   "dependencies": {
     "@audio/mir-chroma": "^1.1.3",
